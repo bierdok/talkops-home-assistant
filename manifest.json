@@ -1,0 +1,27 @@
+{
+  "categories": [
+    "Home Automation"
+  ],
+  "dockerRepository": "bierdok/talkops-home-assistant",
+  "features": [
+    "Lights: Check status, turn on/off",
+    "Shutters: Check status, open, close and stop",
+    "Scene: Trigger",
+    "Sensors: Check status"
+  ],
+  "icon": "https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI",
+  "installationSteps": [
+    "Open Home Assitant from a web browser with admin permissions.",
+    "Open the `Profile` page by clicking on your username at the bottom left.",
+    "Navigate to `Security` tab and scroll down to `Long-lived access tokens` card.",
+    "Click on the button `Create Token`, called the token `TalkOps` and validate.",
+    "Use the generated token to setup the parameter or the environment variable `ACCESS_TOKEN`."
+  ],
+  "name": "Home Assistant",
+  "sdk": {
+    "name": "nodejs",
+    "version": "2.3.4"
+  },
+  "version": "1.0.0",
+  "website": "https://www.home-assistant.io/"
+}

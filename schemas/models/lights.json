@@ -1,0 +1,26 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The light unique identifier"
+      },
+      "name": {
+        "type": "string",
+        "description": "The light name"
+      },
+      "state": {
+        "type": "string",
+        "enum": ["on", "off"],
+        "description": "The light state"
+      },
+      "area_id": {
+        "type": "string",
+        "description": "The related area identifier"
+      }
+    },
+    "required": ["id", "name"]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "update_shutters",
+  "description": "Update shutters",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["open", "close", "stop"],
+        "description": "The desired action"
+      },
+      "ids": {
+        "type": "array",
+        "description": "The shutter identifiers",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": ["action", "ids"]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The room unique identifier"
+      },
+      "name": {
+        "type": "string",
+        "description": "The room name"
+      },
+      "floor_id": {
+        "type": "string",
+        "description": "The related floor identifier"
+      }
+    },
+    "required": ["id", "name"]
+  }
+}

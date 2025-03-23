@@ -1,0 +1,17 @@
+{
+  "name": "enable_scenes",
+  "description": "Trigger scenes",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "ids": {
+        "type": "array",
+        "description": "The scene identifiers",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": ["ids"]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The sensor unique identifier"
+      },
+      "name": {
+        "type": "string",
+        "description": "The sensor name"
+      },
+      "value": {
+        "type": "string",
+        "description": "The sensor value"
+      },
+      "unit": {
+        "type": "string",
+        "description": "The sensor unit"
+      },
+      "area_id": {
+        "type": "string",
+        "description": "The related area identifier"
+      }
+    },
+    "required": ["id", "name"]
+  }
+}

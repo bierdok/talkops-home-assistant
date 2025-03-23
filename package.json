@@ -1,6 +1,8 @@
 {
   "version": "1.0.0",
   "dependencies": {
-    "talkops": "^2.3.0"
+    "js-yaml": "^4.1.0",
+    "talkops": "^2.3.0",
+    "ws": "^8.18.1"
   }
 }

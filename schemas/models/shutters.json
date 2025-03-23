@@ -1,0 +1,26 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The shutter unique identifier"
+      },
+      "name": {
+        "type": "string",
+        "description": "The shutter name"
+      },
+      "state": {
+        "type": "string",
+        "enum": ["opened", "unknown", "closed"],
+        "description": "The shutter state"
+      },
+      "area_id": {
+        "type": "string",
+        "description": "The related area identifier"
+      }
+    },
+    "required": ["id", "name"]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "update_lights",
+  "description": "Update lights",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["on", "off"],
+        "description": "The desired action"
+      },
+      "ids": {
+        "type": "array",
+        "description": "The light identifiers",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": ["action", "ids"]
+  }
+}

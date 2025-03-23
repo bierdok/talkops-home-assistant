@@ -1,0 +1,21 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The scene unique identifier"
+      },
+      "name": {
+        "type": "string",
+        "description": "The scene name"
+      },
+      "area_id": {
+        "type": "string",
+        "description": "The related area identifier"
+      }
+    },
+    "required": ["id", "name"]
+  }
+}
