@@ -82,12 +82,20 @@ function call(type, params) {
 }
 
 function connect() {
-  socket = new WebSocket(`${wsBaseUrl.getValue()}/api/websocket`)
+  try {
+    socket = new WebSocket(`${wsBaseUrl.getValue()}/api/websocket`)
+  } catch (err) {
+    extension.addError(err.message)
+    setTimeout(connect, 1000)
+    return
+  }
   socket.onerror = (err) => {
-    extension.errors = [err.message]
+    extension.addError(err.message)
+    setTimeout(connect, 1000)
+    return
   }
   socket.onopen = () => {
-    extension.errors = []
+    extension.clearErrors()
     socket.send(
       JSON.stringify({
         type: 'auth',
@@ -105,12 +113,12 @@ function connect() {
   socket.onmessage = (message) => {
     const data = JSON.parse(message.data)
     if (data.type === 'auth_ok') {
-      extension.errors = []
+      extension.clearErrors()
       refresh()
       interval = setInterval(refresh, 5000)
     }
     if (data.type === 'auth_invalid') {
-      extension.errors = [data.message]
+      extension.addError(data.message)
     }
     if (data.type === 'result' && data.success) {
       const type = types.get(data.id)
@@ -245,7 +253,7 @@ function connect() {
     shutters = []
     sensors = []
     scenes = []
-    extension.errors = ['Server unreachable']
+    extension.addError('Server unreachable')
   }
 }
 connect()
