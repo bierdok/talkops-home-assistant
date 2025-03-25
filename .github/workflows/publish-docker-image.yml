@@ -13,6 +13,9 @@ jobs:
       packages: write
 
     steps:
+      - name: Extract tag without 'v'
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -38,5 +41,5 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           tags: |
-            ghcr.io/${{ github.repository }}:${{ github.ref_name##v }}
+            ghcr.io/${{ github.repository }}:${{ env.TAG_NAME }}
             ghcr.io/${{ github.repository }}:latest
