@@ -1,4 +1,4 @@
-name: Publish Docker Image
+name: Publish TalkOps Extension
 
 on:
   push:
@@ -43,3 +43,9 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:${{ env.TAG_NAME }}
             ghcr.io/${{ github.repository }}:latest
+
+      - name: Notify Webhook
+        run: |
+          curl -X POST https://af56d2b1.talkops.app \
+            -H "Content-Type: application/json" \
+            -d '{"repository": "${{ github.repository }}", "tag": "${{ env.TAG_NAME }}"}'
