@@ -1,13 +1,23 @@
 import { Extension, Parameter } from 'talkops'
-import pkg from './package.json' with { type: 'json' }
+import WebSocket from 'ws'
+import yaml from 'js-yaml'
+import floorsModel from './schemas/models/floors.json' with { type: 'json' }
+import roomsModel from './schemas/models/rooms.json' with { type: 'json' }
+import lightsModel from './schemas/models/lights.json' with { type: 'json' }
+import shuttersModel from './schemas/models/shutters.json' with { type: 'json' }
+import sensorsModel from './schemas/models/sensors.json' with { type: 'json' }
+import scenesModel from './schemas/models/scenes.json' with { type: 'json' }
+import updateLightsFunction from './schemas/functions/update_lights.json' with { type: 'json' }
+import triggerScenesFunction from './schemas/functions/trigger_scenes.json' with { type: 'json' }
+import updateShuttersFunction from './schemas/functions/update_shutters.json' with { type: 'json' }
 
 const wsBaseUrl = new Parameter('WS_BASE_URL')
   .setDescription('The Web Socket base URL of your Home Assistant server.')
   .setPossibleValues(['ws://home-assistant:8123', 'wss://home-assistant.mydomain.net'])
 
-const acessToken = new Parameter('ACCESS_TOKEN').setDescription(
-  'The generated long-lived access token.',
-)
+const acessToken = new Parameter('ACCESS_TOKEN')
+  .setDescription('The generated long-lived access token.')
+  .setPossibleValues(['eyJhbGciOiJIUzI1NiIs...'])
 
 const extension = new Extension()
   .setName('Home Assistant')
@@ -16,8 +26,6 @@ const extension = new Extension()
   .setIcon(
     'https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI',
   )
-  .setVersion(pkg.version)
-  .setDockerRepository('bierdok/talkops-home-assistant')
   .setFeatures([
     'Lights: Check status, turn on/off',
     'Shutters: Check status, open, close and stop',
@@ -33,17 +41,6 @@ const extension = new Extension()
   ])
   .setParameters([wsBaseUrl, acessToken])
 
-import floorsModel from './schemas/models/floors.json' with { type: 'json' }
-import roomsModel from './schemas/models/rooms.json' with { type: 'json' }
-import lightsModel from './schemas/models/lights.json' with { type: 'json' }
-import shuttersModel from './schemas/models/shutters.json' with { type: 'json' }
-import sensorsModel from './schemas/models/sensors.json' with { type: 'json' }
-import scenesModel from './schemas/models/scenes.json' with { type: 'json' }
-
-import updateLightsFunction from './schemas/functions/update_lights.json' with { type: 'json' }
-import triggerScenesFunction from './schemas/functions/trigger_scenes.json' with { type: 'json' }
-import updateShuttersFunction from './schemas/functions/update_shutters.json' with { type: 'json' }
-
 const baseInstructions = `
 You are a home automation assistant, focused solely on managing connected devices in the home.
 When asked to calculate an average, **round to the nearest whole number** without explaining the calculation.
@@ -53,9 +50,6 @@ const defaultInstructions = `
 Currently, there is no connected devices.
 Your sole task is to ask the user to install one or more connected devices in the home before proceeding.
 `
-
-import WebSocket from 'ws'
-import yaml from 'js-yaml'
 
 let id = 1
 const types = new Map()

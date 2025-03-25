@@ -1,6 +1,5 @@
 {
   "category": "Home Automation",
-  "dockerRepository": "bierdok/talkops-home-assistant",
   "features": [
     "Lights: Check status, turn on/off",
     "Shutters: Check status, open, close and stop",
@@ -18,8 +17,7 @@
   "name": "Home Assistant",
   "sdk": {
     "name": "nodejs",
-    "version": "2.4.2"
+    "version": "2.5.0"
   },
-  "version": "1.0.0",
   "website": "https://www.home-assistant.io/"
 }

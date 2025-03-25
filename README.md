@@ -1,5 +1,4 @@
 # TalkOps Extension: Home Assistant
-![Docker Pulls](https://img.shields.io/docker/pulls/bierdok/talkops-home-assistant)
 
 A TalkOps Extension made to work with [TalkOps](https://talkops.app).
 
