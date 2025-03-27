@@ -14,10 +14,12 @@ import updateShuttersFunction from './schemas/functions/update_shutters.json' wi
 const wsBaseUrl = new Parameter('WS_BASE_URL')
   .setDescription('The Web Socket base URL of your Home Assistant server.')
   .setPossibleValues(['ws://home-assistant:8123', 'wss://home-assistant.mydomain.net'])
+  .setType('url')
 
 const acessToken = new Parameter('ACCESS_TOKEN')
   .setDescription('The generated long-lived access token.')
   .setPossibleValues(['eyJhbGciOiJIUzI1NiIs...'])
+  .setType('password')
 
 const extension = new Extension()
   .setName('Home Assistant')
@@ -250,7 +252,6 @@ function connect() {
     extension.addError('Server unreachable')
   }
 }
-connect()
 
 extension.setFunctions([
   async function trigger_scenes(ids) {
@@ -302,3 +303,5 @@ extension.setFunctions([
     return 'Done.'
   },
 ])
+
+extension.setBootstrap(connect)
