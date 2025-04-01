@@ -1,5 +1,6 @@
 {
   "category": "home_automation",
+  "demo": false,
   "features": [
     "Lights: Check status, turn on/off",
     "Shutters: Check status, open, close and stop",
@@ -10,7 +11,7 @@
   "name": "Home Assistant",
   "sdk": {
     "name": "nodejs",
-    "version": "2.6.0"
+    "version": "2.7.0"
   },
   "softwareVersion": null,
   "website": "https://www.home-assistant.io/"
