@@ -24,7 +24,7 @@ const acessToken = new Parameter('ACCESS_TOKEN')
 const extension = new Extension()
   .setName('Home Assistant')
   .setWebsite('https://www.home-assistant.io/')
-  .setCategory('Home Automation')
+  .setCategory('home_automation')
   .setIcon(
     'https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI',
   )

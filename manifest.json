@@ -1,5 +1,5 @@
 {
-  "category": "Home Automation",
+  "category": "home_automation",
   "features": [
     "Lights: Check status, turn on/off",
     "Shutters: Check status, open, close and stop",
