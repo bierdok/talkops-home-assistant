@@ -81,17 +81,16 @@ function connect() {
   try {
     socket = new WebSocket(`${wsBaseUrl.getValue()}/api/websocket`)
   } catch (err) {
-    extension.addError(err.message)
-    setTimeout(connect, 1000)
+    console.error(err.message)
+    setTimeout(connect, 5000)
     return
   }
   socket.onerror = (err) => {
-    extension.addError(err.message)
-    setTimeout(connect, 1000)
+    console.error(err.message)
+    setTimeout(connect, 5000)
     return
   }
   socket.onopen = () => {
-    extension.clearErrors()
     socket.send(
       JSON.stringify({
         type: 'auth',
@@ -109,12 +108,11 @@ function connect() {
   socket.onmessage = (message) => {
     const data = JSON.parse(message.data)
     if (data.type === 'auth_ok') {
-      extension.clearErrors()
       refresh()
       interval = setInterval(refresh, 5000)
     }
     if (data.type === 'auth_invalid') {
-      extension.addError(data.message)
+      console.error(data.message)
     }
     if (data.type === 'result' && data.success) {
       const type = types.get(data.id)
@@ -241,7 +239,7 @@ function connect() {
   }
   socket.onclose = () => {
     interval && clearInterval(interval)
-    setTimeout(connect, 1000)
+    setTimeout(connect, 5000)
     id = 1
     floors = []
     rooms = []
@@ -249,7 +247,7 @@ function connect() {
     shutters = []
     sensors = []
     scenes = []
-    extension.addError('Server unreachable')
+    console.error('Server unreachable')
   }
 }
 
