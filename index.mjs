@@ -1,15 +1,16 @@
 import { Extension, Parameter } from 'talkops'
 import WebSocket from 'ws'
 import yaml from 'js-yaml'
-import floorsModel from './schemas/models/floors.json' with { type: 'json' }
-import roomsModel from './schemas/models/rooms.json' with { type: 'json' }
-import lightsModel from './schemas/models/lights.json' with { type: 'json' }
-import shuttersModel from './schemas/models/shutters.json' with { type: 'json' }
-import sensorsModel from './schemas/models/sensors.json' with { type: 'json' }
-import scenesModel from './schemas/models/scenes.json' with { type: 'json' }
-import updateLightsFunction from './schemas/functions/update_lights.json' with { type: 'json' }
-import triggerScenesFunction from './schemas/functions/trigger_scenes.json' with { type: 'json' }
-import updateShuttersFunction from './schemas/functions/update_shutters.json' with { type: 'json' }
+
+import floorsModel from './src/models/floors.json' with { type: 'json' }
+import roomsModel from './src/models/rooms.json' with { type: 'json' }
+import lightsModel from './src/models/lights.json' with { type: 'json' }
+import shuttersModel from './src/models/shutters.json' with { type: 'json' }
+import sensorsModel from './src/models/sensors.json' with { type: 'json' }
+import scenesModel from './src/models/scenes.json' with { type: 'json' }
+import updateLightsFunction from './src/functions/update_lights.json' with { type: 'json' }
+import triggerScenesFunction from './src/functions/trigger_scenes.json' with { type: 'json' }
+import updateShuttersFunction from './src/functions/update_shutters.json' with { type: 'json' }
 
 const wsBaseUrl = new Parameter('WS_BASE_URL')
   .setDescription('The Web Socket base URL of your Home Assistant server.')
