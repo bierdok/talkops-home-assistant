@@ -303,4 +303,4 @@ extension.setFunctions([
   },
 ])
 
-extension.setBootstrap(connect)
+extension.on('boot', connect)
