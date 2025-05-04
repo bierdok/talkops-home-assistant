@@ -43,6 +43,7 @@ const extension = new Extension()
     'Use the generated token to setup the parameter or the environment variable \`ACCESS_TOKEN\`.',
   ])
   .setParameters([wsBaseUrl, acessToken])
+  .start()
 
 const baseInstructions = `
 You are a home automation assistant, focused solely on managing connected devices in the home.
