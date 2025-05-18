@@ -13,6 +13,6 @@
     "name": "nodejs",
     "version": "2.15.3"
   },
-  "softwareVersion": "2025.2.5",
+  "softwareVersion": null,
   "website": "https://www.home-assistant.io/"
 }
