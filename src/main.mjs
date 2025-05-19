@@ -67,7 +67,8 @@ let sensors = []
 let scenes = []
 
 let socket = null
-let interval = null
+const connectTimeout = null
+const refreshTimeout = null
 
 function call(type, params) {
   if (!socket || socket.readyState !== WebSocket.OPEN) {
@@ -79,169 +80,161 @@ function call(type, params) {
   return true
 }
 
+function refresh() {
+  call('get_config')
+  call('get_states')
+  call('config/floor_registry/list')
+  call('config/area_registry/list')
+  call('config/entity_registry/list')
+  refreshTimeout && clearTimeout(refreshTimeout)
+  refreshTimeout = setTimeout(refresh, 60000)
+}
+
 function connect() {
   try {
     socket = new WebSocket(`${wsBaseUrl.getValue()}/api/websocket`)
-  } catch (err) {
-    console.error(err.message)
-    setTimeout(connect, 5000)
-    return
-  }
-  socket.onerror = (err) => {
-    console.error(err.message)
-    setTimeout(connect, 5000)
-    return
-  }
-  socket.onopen = () => {
-    socket.send(
-      JSON.stringify({
-        type: 'auth',
-        access_token: acessToken.getValue(),
-      }),
-    )
-  }
-  function refresh() {
-    call('get_config')
-    call('get_states')
-    call('config/floor_registry/list')
-    call('config/area_registry/list')
-    call('config/entity_registry/list')
-  }
-  socket.onmessage = (message) => {
-    const data = JSON.parse(message.data)
-    if (data.type === 'auth_ok') {
-      refresh()
-      interval = setInterval(refresh, 60000)
+    socket.onopen = () => {
+      socket.send(
+        JSON.stringify({
+          type: 'auth',
+          access_token: acessToken.getValue(),
+        }),
+      )
     }
-    if (data.type === 'auth_invalid') {
-      console.error(data.message)
-    }
-    if (data.type === 'result' && data.success) {
-      const type = types.get(data.id)
-      if (type === 'get_config') {
-        extension.setSoftwareVersion(data.result.version)
+    socket.onmessage = (message) => {
+      const data = JSON.parse(message.data)
+      if (data.type === 'auth_ok') {
+        refresh()
       }
-      if (type === 'get_states') {
-        data.result.forEach((entity) => {
-          states.set(entity.entity_id, entity.state)
-        })
-        data.result
-          .filter((entity) => entity.attributes.unit_of_measurement !== undefined)
-          .forEach((entity) => {
-            units.set(entity.entity_id, entity.attributes.unit_of_measurement)
-          })
+      if (data.type === 'auth_invalid') {
+        console.error(data.message)
       }
-      if (type === 'config/floor_registry/list') {
-        floors = data.result.map((floor) => {
-          return {
-            id: floor.floor_id,
-            name: floor.name,
-            level: floor.level,
-          }
-        })
-      }
-      if (type === 'config/area_registry/list') {
-        rooms = data.result.map((area) => {
-          return {
-            id: area.area_id,
-            name: area.name,
-            floor_id: area.floor_id,
-          }
-        })
-      }
-      if (type === 'config/entity_registry/list') {
-        lights = data.result
-          .filter((entity) => entity.entity_id.startsWith('light'))
-          .map((entity) => {
-            return {
-              id: entity.entity_id,
-              name: entity.name || entity.original_name,
-              state: states.get(entity.entity_id),
-              area_id: entity.area_id,
-            }
-          })
-        shutters = data.result
-          .filter((entity) => entity.entity_id.startsWith('cover'))
-          .map((entity) => {
-            return {
-              id: entity.entity_id,
-              name: entity.name || entity.original_name,
-              state: states.get(entity.entity_id),
-              area_id: entity.area_id,
-            }
-          })
-        sensors = data.result
-          .filter(
-            (entity) =>
-              entity.entity_id.startsWith('sensor') &&
-              states.get(entity.entity_id) &&
-              units.get(entity.entity_id),
-          )
-          .map((entity) => {
-            return {
-              id: entity.entity_id,
-              name: entity.name || entity.original_name,
-              value: states.get(entity.entity_id),
-              unit: units.get(entity.entity_id),
-              area_id: entity.area_id,
-            }
-          })
-        scenes = data.result
-          .filter((entity) => entity.entity_id.startsWith('scene'))
-          .map((entity) => {
-            return {
-              id: entity.entity_id,
-              name: entity.name || entity.original_name,
-              area_id: entity.area_id,
-            }
-          })
-        if (type === 'call_service') {
-          console.log(data.result)
+      if (data.type === 'result' && data.success) {
+        const type = types.get(data.id)
+        if (type === 'get_config') {
+          extension.setSoftwareVersion(data.result.version)
         }
-      }
+        if (type === 'get_states') {
+          data.result.forEach((entity) => {
+            states.set(entity.entity_id, entity.state)
+          })
+          data.result
+            .filter((entity) => entity.attributes.unit_of_measurement !== undefined)
+            .forEach((entity) => {
+              units.set(entity.entity_id, entity.attributes.unit_of_measurement)
+            })
+        }
+        if (type === 'config/floor_registry/list') {
+          floors = data.result.map((floor) => {
+            return {
+              id: floor.floor_id,
+              name: floor.name,
+              level: floor.level,
+            }
+          })
+        }
+        if (type === 'config/area_registry/list') {
+          rooms = data.result.map((area) => {
+            return {
+              id: area.area_id,
+              name: area.name,
+              floor_id: area.floor_id,
+            }
+          })
+        }
+        if (type === 'config/entity_registry/list') {
+          lights = data.result
+            .filter((entity) => entity.entity_id.startsWith('light'))
+            .map((entity) => {
+              return {
+                id: entity.entity_id,
+                name: entity.name || entity.original_name,
+                state: states.get(entity.entity_id),
+                area_id: entity.area_id,
+              }
+            })
+          shutters = data.result
+            .filter((entity) => entity.entity_id.startsWith('cover'))
+            .map((entity) => {
+              return {
+                id: entity.entity_id,
+                name: entity.name || entity.original_name,
+                state: states.get(entity.entity_id),
+                area_id: entity.area_id,
+              }
+            })
+          sensors = data.result
+            .filter(
+              (entity) =>
+                entity.entity_id.startsWith('sensor') &&
+                states.get(entity.entity_id) &&
+                units.get(entity.entity_id),
+            )
+            .map((entity) => {
+              return {
+                id: entity.entity_id,
+                name: entity.name || entity.original_name,
+                value: states.get(entity.entity_id),
+                unit: units.get(entity.entity_id),
+                area_id: entity.area_id,
+              }
+            })
+          scenes = data.result
+            .filter((entity) => entity.entity_id.startsWith('scene'))
+            .map((entity) => {
+              return {
+                id: entity.entity_id,
+                name: entity.name || entity.original_name,
+                area_id: entity.area_id,
+              }
+            })
+          // if (type === 'call_service') {
+          //   console.log(data.result)
+          // }
+        }
 
-      const instructions = [baseInstructions]
+        const instructions = [baseInstructions]
 
-      if (!lights.length && !shutters.length && !sensors.length && !scenes.length) {
-        instructions.push(defaultInstructions)
-      } else {
-        instructions.push('``` yaml')
-        instructions.push(
-          yaml.dump({
-            floorsModel,
-            roomsModel,
-            lightsModel,
-            shuttersModel,
-            sensorsModel,
-            scenesModel,
-            floors,
-            rooms,
-            lights,
-            shutters,
-            sensors,
-            scenes,
-          }),
-        )
-        instructions.push('```')
-      }
-      extension.setInstructions(instructions.join('\n'))
+        if (!lights.length && !shutters.length && !sensors.length && !scenes.length) {
+          instructions.push(defaultInstructions)
+        } else {
+          instructions.push('``` yaml')
+          instructions.push(
+            yaml.dump({
+              floorsModel,
+              roomsModel,
+              lightsModel,
+              shuttersModel,
+              sensorsModel,
+              scenesModel,
+              floors,
+              rooms,
+              lights,
+              shutters,
+              sensors,
+              scenes,
+            }),
+          )
+          instructions.push('```')
+        }
+        extension.setInstructions(instructions.join('\n'))
 
-      const functionSchemas = []
-      if (lights) {
-        functionSchemas.push(updateLightsFunction)
+        const functionSchemas = []
+        if (lights) {
+          functionSchemas.push(updateLightsFunction)
+        }
+        if (scenes) {
+          functionSchemas.push(triggerScenesFunction)
+        }
+        if (shutters) {
+          functionSchemas.push(updateShuttersFunction)
+        }
+        extension.setFunctionSchemas(functionSchemas)
       }
-      if (scenes) {
-        functionSchemas.push(triggerScenesFunction)
-      }
-      if (shutters) {
-        functionSchemas.push(updateShuttersFunction)
-      }
-      extension.setFunctionSchemas(functionSchemas)
     }
-  }
-  socket.onclose = () => {
-    interval && clearInterval(interval)
-    setTimeout(connect, 5000)
+  } catch (error) {
+    connectTimeout && clearTimeout(connectTimeout)
+    connectTimeout = setTimeout(connect, 5000)
     id = 1
     floors = []
     rooms = []
@@ -249,7 +242,7 @@ function connect() {
     shutters = []
     sensors = []
     scenes = []
-    console.error('Server unreachable')
+    console.error(error)
   }
 }
 
