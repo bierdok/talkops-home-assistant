@@ -111,7 +111,7 @@ function connect() {
     const data = JSON.parse(message.data)
     if (data.type === 'auth_ok') {
       refresh()
-      interval = setInterval(refresh, 5000)
+      interval = setInterval(refresh, 60000)
     }
     if (data.type === 'auth_invalid') {
       console.error(data.message)
