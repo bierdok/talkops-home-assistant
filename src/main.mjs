@@ -198,7 +198,7 @@ function connect() {
     )
   }
   socket.onerror = (err) => {
-    if (extension.isEnabled()) return
+    if (!extension.isEnabled()) return
     console.error(err.message)
   }
   socket.onclose = () => {
