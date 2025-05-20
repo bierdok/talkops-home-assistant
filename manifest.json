@@ -11,8 +11,8 @@
   "name": "Home Assistant",
   "sdk": {
     "name": "nodejs",
-    "version": "2.15.4"
+    "version": "2.15.6"
   },
-  "softwareVersion": null,
+  "softwareVersion": "2025.2.5",
   "website": "https://www.home-assistant.io/"
 }
