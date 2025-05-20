@@ -198,10 +198,10 @@ function connect() {
     )
   }
   socket.onerror = (err) => {
+    if (extension.isEnabled()) return
     console.error(err.message)
   }
   socket.onclose = () => {
-    console.error('Disconnection')
     connectTimeout = setTimeout(connect, 5000)
   }
   socket.onmessage = (message) => {
