@@ -223,9 +223,6 @@ function connect() {
 
 function update(data) {
   const type = types.get(data.id)
-  if (type === 'get_config') {
-    extension.setSoftwareVersion(data.result.version)
-  }
   if (type === 'get_states') {
     data.result.forEach((entity) => {
       states.set(entity.entity_id, entity.state)
